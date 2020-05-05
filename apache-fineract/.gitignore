@@ -1,0 +1,8 @@
+
+apache-fineract-1.3.0-src/fineract-provider/fineract-provider.iml
+apache-fineract-1.3.0-src/build/**
+.gradle
+.idea
+apache-fineract-1.3.0-src/fineract-provider/.gradle/**
+apache-fineract-1.3.0-src/fineract-provider/.settings/**
+apache-fineract.iml
