@@ -138,6 +138,12 @@ public class Address extends AbstractPersistableCustom<Long> {
 	@Column(name = "updated_on")
 	private Date updatedOn;
 
+	@Column(name = "ctm_is_delete")
+	private Boolean ctmIsDelete;
+
+	@Column(name = "ctm_delete_by")
+	private Long ctmDeleteBy;
+
 	private Address(final String street,final String betweenStreets,final String extNo, final String intNo, final String addressLine1,
 					final String building, final String department, final String addressLine2, final String lot, final String block,
 					final String addressLine3, final String postalCode, final Long suburbId, final String townVillage, final Long cityId,
@@ -243,8 +249,8 @@ public class Address extends AbstractPersistableCustom<Long> {
 		final LocalDate updatedOn = command.localDateValueOfParameterNamed("updatedOn");
 
 		return new Address(street, betweenStreets,extNo,intNo, addressLine1, building,department, addressLine2, lot, block,
-				           addressLine3, postalCode,suburbId, townVillage, cityId, city, municipalityId, countyDistrict,
-				           stateId, state , countryId, country, latitude, longitude, createdBy, createdOn, updatedBy, updatedOn);
+				addressLine3, postalCode,suburbId, townVillage, cityId, city, municipalityId, countyDistrict,
+				stateId, state , countryId, country, latitude, longitude, createdBy, createdOn, updatedBy, updatedOn);
 	}
 
 	public static Address fromJsonObject(final JsonObject jsonObject) {
@@ -621,4 +627,14 @@ public class Address extends AbstractPersistableCustom<Long> {
 	public void setUpdatedOn(Date updatedOn) {
 		this.updatedOn = updatedOn;
 	}
+
+	public void delete(){
+		this.ctmIsDelete = true;
+	}
+
+	public boolean ctmIsDelete(){return this.ctmIsDelete;}
+
+	public Long getCtmDeleteBy() { return ctmDeleteBy; }
+
+	public void setCtmDeleteBy(Long ctmDeleteBy) { this.ctmDeleteBy = ctmDeleteBy; }
 }

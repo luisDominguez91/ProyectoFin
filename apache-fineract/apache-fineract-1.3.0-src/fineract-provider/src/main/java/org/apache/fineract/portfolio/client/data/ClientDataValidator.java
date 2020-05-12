@@ -271,18 +271,6 @@ public final class ClientDataValidator {
             baseDataValidator.reset().parameter(ClientApiConstants.nssParamName).value(nss).ignoreIfNull()
                     .notExceedingLengthOf(11);
         }
-
-        //LADP
-        if(this.fromApiJsonHelper.parameterExists(ClientApiConstants.campoPrueba, element)){
-            final String campoPrueba = this.fromApiJsonHelper.extractStringNamed(ClientApiConstants.campoPrueba, element);
-            baseDataValidator.reset().parameter(ClientApiConstants.campoPrueba).value(campoPrueba).ignoreIfNull()
-                .notExceedingLengthOf(30);
-        }
-
-        if (this.fromApiJsonHelper.parameterExists(ClientApiConstants.paisPrueba, element)) {
-            final Integer paisPruebaId = this.fromApiJsonHelper.extractIntegerSansLocaleNamed(ClientApiConstants.paisPrueba, element);
-            baseDataValidator.reset().parameter(ClientApiConstants.paisPrueba).value(paisPruebaId).integerGreaterThanZero();
-        }
         // }
         List<ApiParameterError> dataValidationErrorsForClientNonPerson = getDataValidationErrorsForCreateOnClientNonPerson(element.getAsJsonObject().get(ClientApiConstants.clientNonPersonDetailsParamName));
         dataValidationErrors.addAll(dataValidationErrorsForClientNonPerson);

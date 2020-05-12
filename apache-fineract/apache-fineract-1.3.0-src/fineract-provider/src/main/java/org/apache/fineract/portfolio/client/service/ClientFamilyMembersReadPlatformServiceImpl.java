@@ -29,7 +29,6 @@ import org.apache.fineract.infrastructure.codes.service.CodeValueReadPlatformSer
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
-import org.apache.fineract.portfolio.address.data.AddressData;
 import org.apache.fineract.portfolio.client.api.ClientApiConstants;
 import org.apache.fineract.portfolio.client.data.ClientFamilyMembersData;
 import org.joda.time.LocalDate;
@@ -120,7 +119,7 @@ public class ClientFamilyMembersReadPlatformServiceImpl implements ClientFamilyM
 		this.context.authenticatedUser();
 
 		final ClientFamilyMembersMapper rm = new ClientFamilyMembersMapper();
-		final String sql = "select " + rm.schema() + " where fmb.client_id=?";
+		final String sql = "select " + rm.schema() + " where fmb.client_id=? AND fmb.ctm_is_delete=0";
 
 		return this.jdbcTemplate.query(sql, rm, new Object[] { clientId });
 	}
@@ -132,7 +131,7 @@ public class ClientFamilyMembersReadPlatformServiceImpl implements ClientFamilyM
 		this.context.authenticatedUser();
 
 		final ClientFamilyMembersMapper rm = new ClientFamilyMembersMapper();
-		final String sql = "select " + rm.schema() + " where fmb.id=? ";
+		final String sql = "select " + rm.schema() + " where fmb.id=? AND fmb.ctm_is_delete=0";
 
 		return this.jdbcTemplate.queryForObject(sql, rm, new Object[] { id });
 	}

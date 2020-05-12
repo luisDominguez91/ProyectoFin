@@ -92,13 +92,13 @@ public class ClientFamilyMembers extends AbstractPersistableCustom<Long> {
 	private String rfc;
 
 	@Column(name = "ctm_created_by")
-	private String createdBy;
+	private Long createdBy;
 
 	@Column(name = "ctm_created_on")
 	private Date createdOn;
 
 	@Column(name = "ctm_updated_by")
-	private String updatedBy;
+	private Long updatedBy;
 
 	@Column(name = "ctm_updated_on")
 	private Date updatedOn;
@@ -114,18 +114,26 @@ public class ClientFamilyMembers extends AbstractPersistableCustom<Long> {
 
 	@Column(name = "ctm_is_active", nullable = false)
 	private boolean active;
+
+    @Column(name = "ctm_deleted_by")
+    private Long deletedBy;
+
+    @Column(name = "ctm_deleted_on")
+    private Date deletedOn;
+
+    @Column(name = "ctm_is_delete", nullable = false)
+    private boolean delete;
 	// }
 
 
-
-	private ClientFamilyMembers(final Client client,final String firstname,
-				final String middlename,final String lastName,final String qualification,
-				final String mobileNumber,final Long age,final Boolean isDependent,
-				final CodeValue relationship,final CodeValue maritalStatus,final CodeValue gender,
-				final Date dateOfBirth,final CodeValue profession ,final String motherlastname,
-				final String curp, final String rfc, final String createdBy, final Date createdOn,
-				final String updatedBy, final Date updatedOn, final String emailAddress, final String nss,
-				final String phoneNo, final boolean active)
+    private ClientFamilyMembers(final Client client, final String firstname,
+                                final String middlename, final String lastName, final String qualification,
+                                final String mobileNumber, final Long age, final Boolean isDependent,
+                                final CodeValue relationship, final CodeValue maritalStatus, final CodeValue gender,
+                                final Date dateOfBirth, final CodeValue profession , final String motherlastname,
+                                final String curp, final String rfc, final Long createdBy, final Date createdOn,
+                                final Long updatedBy, final Date updatedOn, final String emailAddress, final String nss,
+                                final String phoneNo, final boolean active, final Long deletedBy, final Date deletedOn, final boolean delete)
 		{
 			
 			this.client=client;
@@ -153,6 +161,9 @@ public class ClientFamilyMembers extends AbstractPersistableCustom<Long> {
 			this.nss=nss;
 			this.phoneNo=phoneNo;
 			this.active=active;
+			this.deletedBy=deletedBy;
+			this.deletedOn=deletedOn;
+			this.delete=delete;
 			// }
 		}
 		
@@ -167,14 +178,14 @@ public class ClientFamilyMembers extends AbstractPersistableCustom<Long> {
 				final String mobileNumber,final Long age,final Boolean isDependent,
 				final CodeValue relationship,final CodeValue maritalStatus,final CodeValue gender,
 				final Date dateOfBirth,final CodeValue profession,final String motherlastName,
-				final String curp, final String rfc, final String createdBy, final Date createdOn,
-				final String updatedBy, final Date updatedOn, final String emailAddress, final String nss,
-				final String phoneNo, final boolean active)
+				final String curp, final String rfc, final Long createdBy, final Date createdOn,
+				final Long updatedBy, final Date updatedOn, final String emailAddress, final String nss,
+				final String phoneNo, final boolean active, final Long deletedBy, final Date deletedOn, final boolean delete)
 		{
 			return new ClientFamilyMembers(client,firstName,middleName,lastName,qualification,
 					mobileNumber,age,isDependent,relationship,maritalStatus,gender,
 					dateOfBirth,profession, motherlastName, curp, rfc, createdBy, createdOn,
-					updatedBy, updatedOn, emailAddress, nss, phoneNo, active);
+					updatedBy, updatedOn, emailAddress, nss, phoneNo, active, deletedBy, deletedOn, delete);
 		}
 
 	public Client getClient() {
@@ -305,11 +316,11 @@ public class ClientFamilyMembers extends AbstractPersistableCustom<Long> {
 		this.rfc = rfc;
 	}
 
-	public String getCreatedBy() {
+	public Long getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(String createdBy) {
+	public void setCreatedBy(Long createdBy) {
 		this.createdBy = createdBy;
 	}
 
@@ -321,11 +332,11 @@ public class ClientFamilyMembers extends AbstractPersistableCustom<Long> {
 		this.createdOn = createdOn;
 	}
 
-	public String getUpdatedBy() {
+	public Long getUpdatedBy() {
 		return updatedBy;
 	}
 
-	public void setUpdatedBy(String updatedBy) {
+	public void setUpdatedBy(Long updatedBy) {
 		this.updatedBy = updatedBy;
 	}
 
@@ -368,4 +379,40 @@ public class ClientFamilyMembers extends AbstractPersistableCustom<Long> {
 	public void setActive(boolean active) {
 		this.active = active;
 	}
+
+    public Long getDeletedBy() {
+        return deletedBy;
+    }
+
+    public void setDeletedBy(Long deletedBy) {
+        this.deletedBy = deletedBy;
+    }
+
+    public Date getDeletedOn() {
+        return deletedOn;
+    }
+
+    public void setDeletedOn(Date deletedOn) {
+        this.deletedOn = deletedOn;
+    }
+
+    public boolean isDelete() {
+        return delete;
+    }
+
+    public void setDelete(boolean delete) {
+        this.delete = delete;
+    }
+
+    /**
+     * Delete is a <i>soft delete</i>. Updates flag so it wont appear in
+     * query/report results.
+     *
+     */
+    public void delete(Long idUser) {
+        this.delete = true;
+        this.active = false;
+		this.setDeletedBy(idUser);
+		this.setDeletedOn(new Date());
+    }
 }

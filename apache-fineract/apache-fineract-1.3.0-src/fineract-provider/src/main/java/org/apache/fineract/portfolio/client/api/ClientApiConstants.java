@@ -106,11 +106,6 @@ public class ClientApiConstants {
     public static final String closureReasonIdParamName = "closureReasonId";
     public static final String reopenedDateParamName = "reopenedDate";
 
-    //LADP
-    public static final String campoPrueba = "campoPrueba";
-    public static final String paisPrueba = "paisPrueba";
-    public static final String PAIS = "Country";
-
     // Campos nuevos {
     public static final String motherlastnameParamName = "motherlastname";
     public static final String rfcParamName = "rfc";

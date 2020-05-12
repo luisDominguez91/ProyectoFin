@@ -278,12 +278,6 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
                         ClientApiConstants.CLIENT_CLASSIFICATION, clientClassificationId);
             }
 
-            //LADP
-            CodeValue paisPrueba = null;
-            final Long paisPruebaId = command.longValueOfParameterNamed(ClientApiConstants.paisPrueba);
-            if (paisPruebaId != null) {
-                paisPrueba = this.codeValueRepository.findOneByCodeNameAndIdWithNotFoundDetection(ClientApiConstants.PAIS, paisPruebaId);
-            }
 
             final Long savingsProductId = command.longValueOfParameterNamed(ClientApiConstants.savingsProductIdParamName);
             if (savingsProductId != null) {
@@ -318,7 +312,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
             // }
 
             final Client newClient = Client.createNew(currentUser, clientOffice, clientParentGroup, staff, savingsProductId, gender,
-                    clientType, clientClassification, maritalStatus, filitation, legalFormValue, command, paisPrueba);
+                    clientType, clientClassification, maritalStatus, filitation, legalFormValue, command);
             this.clientRepository.save(newClient);
             boolean rollbackTransaction = false;
             if (newClient.isActive()) {

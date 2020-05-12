@@ -55,10 +55,10 @@ public class AddressWritePlatformServiceImpl implements AddressWritePlatformServ
 
 	@Autowired
 	public AddressWritePlatformServiceImpl(final PlatformSecurityContext context,
-			final CodeValueRepository codeValueRepository, final ClientAddressRepository clientAddressRepository,
-			final ClientRepositoryWrapper clientRepositoryWrapper, final AddressRepository addressRepository,
-			final ClientAddressRepositoryWrapper clientAddressRepositoryWrapper,
-			final AddressCommandFromApiJsonDeserializer fromApiJsonDeserializer) {
+										   final CodeValueRepository codeValueRepository, final ClientAddressRepository clientAddressRepository,
+										   final ClientRepositoryWrapper clientRepositoryWrapper, final AddressRepository addressRepository,
+										   final ClientAddressRepositoryWrapper clientAddressRepositoryWrapper,
+										   final AddressCommandFromApiJsonDeserializer fromApiJsonDeserializer) {
 		this.context = context;
 		this.codeValueRepository = codeValueRepository;
 		this.clientAddressRepository = clientAddressRepository;
@@ -71,7 +71,7 @@ public class AddressWritePlatformServiceImpl implements AddressWritePlatformServ
 
 	@Override
 	public CommandProcessingResult addClientAddress(final Long clientId, final Long addressTypeId,
-			final JsonCommand command) {
+													final JsonCommand command) {
 
 		AppUser user= this.context.authenticatedUser();
 		this.fromApiJsonDeserializer.validateForCreate(clientId,command.json(), true);
@@ -103,14 +103,14 @@ public class AddressWritePlatformServiceImpl implements AddressWritePlatformServ
 		AppUser user= this.context.authenticatedUser();
 		ClientAddress clientAddressobj = new ClientAddress();
 		final JsonArray addressArray = command.arrayOfParameterNamed(ClientApiConstants.address);
-		
+
 		if(addressArray != null){
-			//LADPthis.fromApiJsonDeserializer.validateMaxAddressInClient(addressArray.size());
+			this.fromApiJsonDeserializer.validateMaxAddressInClient(addressArray.size());
 			for (int i = 0; i < addressArray.size(); i++) {
 				final JsonObject jsonObject = addressArray.get(i).getAsJsonObject();
 
 				// validate every address
-				//LADPthis.fromApiJsonDeserializer.validateForCreate(client.getId(), jsonObject.toString(), true);
+				this.fromApiJsonDeserializer.validateForCreate(client.getId(), jsonObject.toString(), true);
 
 				final long addressTypeId = jsonObject.get(ClientApiConstants.addressTypeIdParamName).getAsLong();
 				final CodeValue addressTypeIdObj = this.codeValueRepository.getOne(addressTypeId);
@@ -128,7 +128,7 @@ public class AddressWritePlatformServiceImpl implements AddressWritePlatformServ
 				{
 					isActive= jsonObject.get(ClientApiConstants.isActiveParamName).getAsBoolean();
 				}
-				
+
 
 				clientAddressobj = ClientAddress.fromJson(isActive, client, addobj, addressTypeIdObj);
 				this.clientAddressRepository.save(clientAddressobj);
@@ -324,10 +324,13 @@ public class AddressWritePlatformServiceImpl implements AddressWritePlatformServ
 
 		final Address addobj = this.addressRepository.getOne(addressId);
 
+		addobj.delete();
+		addobj.setCtmDeleteBy(user.getId());
 		addobj.setUpdatedOn(LocalDate.now().toDate());
 		addobj.setUpdatedBy(user.getUsername());
-		this.addressRepository.delete(addobj);
-		
+		//this.addressRepository.delete(addobj);
+		this.addressRepository.save(addobj);
+
 		return new CommandProcessingResultBuilder().withCommandId(command.commandId())
 				.withEntityId(clientAddressObj.getId()).build();
 	}

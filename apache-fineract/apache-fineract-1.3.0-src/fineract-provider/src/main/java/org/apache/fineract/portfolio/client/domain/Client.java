@@ -271,17 +271,10 @@ public final class Client extends AbstractPersistableCustom<Long> {
     @Column(name = "ctm_migration_id", nullable = true)
     private Long migrationId;
 
-    //LADP
-    @Column(name ="campo_prueba", length = 150, nullable = true )
-    private String campoPrueba;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pais_prueba", nullable = true)
-    private CodeValue paisPrueba;
 
     public static Client createNew(final AppUser currentUser, final Office clientOffice, final Group clientParentGroup, final Staff staff,
             final Long savingsProductId, final CodeValue gender, final CodeValue clientType, final CodeValue clientClassification, final CodeValue maritalStatus, final CodeValue filiation,
-            final Integer legalForm, final JsonCommand command, CodeValue paisPrueba) {
+            final Integer legalForm, final JsonCommand command) {
 
         final String accountNo = command.stringValueOfParameterNamed(ClientApiConstants.accountNoParamName);
         final String externalId = command.stringValueOfParameterNamed(ClientApiConstants.externalIdParamName);
@@ -292,9 +285,6 @@ public final class Client extends AbstractPersistableCustom<Long> {
         final String middlename = command.stringValueOfParameterNamed(ClientApiConstants.middlenameParamName);
         final String lastname = command.stringValueOfParameterNamed(ClientApiConstants.lastnameParamName);
         final String fullname = command.stringValueOfParameterNamed(ClientApiConstants.fullnameParamName);
-
-        //LADP Campo de prueba
-        final String campoPrueba = command.stringValueOfParameterNamed(ClientApiConstants.campoPrueba);
 
         // campos nuevos normales {
         final String motherlastname = command.stringValueOfParameterNamed(ClientApiConstants.motherlastnameParamName);
@@ -337,7 +327,7 @@ public final class Client extends AbstractPersistableCustom<Long> {
         final Long savingsAccountId = null;
         return new Client(currentUser, status, clientOffice, clientParentGroup, accountNo, firstname, middlename, lastname, motherlastname, fullname,
                 activationDate, officeJoiningDate, externalId, mobileNo, emailAddress, staff, submittedOnDate, savingsProductId, savingsAccountId, dataOfBirth,
-                gender, clientType, clientClassification, legalForm, isStaff, maritalStatus,filiation,rfc, curp,sonsNo,nss,phoneNo,migrationId, campoPrueba, paisPrueba);
+                gender, clientType, clientClassification, legalForm, isStaff, maritalStatus,filiation,rfc, curp,sonsNo,nss,phoneNo,migrationId);
     }
 
     protected Client() {
@@ -349,8 +339,7 @@ public final class Client extends AbstractPersistableCustom<Long> {
             final LocalDate activationDate, final LocalDate officeJoiningDate, final String externalId, final String mobileNo, final String emailAddress,
             final Staff staff, final LocalDate submittedOnDate, final Long savingsProductId, final Long savingsAccountId,
             final LocalDate dateOfBirth, final CodeValue gender, final CodeValue clientType, final CodeValue clientClassification, final Integer legalForm, final Boolean isStaff,
-            final CodeValue maritalStatus, final CodeValue filiation, final String rfc,final String curp, final String sonsNo, final String nss, final String phoneNo, final Long migrationId,
-            final String campoPrueba, final CodeValue paisPrueba) {
+            final CodeValue maritalStatus, final CodeValue filiation, final String rfc,final String curp, final String sonsNo, final String nss, final String phoneNo, final Long migrationId) {
 
         if (StringUtils.isBlank(accountNo)) {
             this.accountNumber = new RandomPasswordGenerator(19).generate();
@@ -393,13 +382,6 @@ public final class Client extends AbstractPersistableCustom<Long> {
             this.firstname = firstname.trim();
         } else {
             this.firstname = null;
-        }
-
-        //LADP Campo Prueba
-        if(StringUtils.isNotBlank(campoPrueba)){
-            this.campoPrueba = campoPrueba.trim();
-        }else{
-            this.campoPrueba = null;
         }
 
         if (StringUtils.isNotBlank(middlename)) {
@@ -475,12 +457,6 @@ public final class Client extends AbstractPersistableCustom<Long> {
         if (filiation != null) {
             this.filiation = filiation;
         }
-
-        //LADP
-        if(paisPrueba != null){
-            this.paisPrueba = paisPrueba;
-        }
-
         this.migrationId=migrationId;
         // }
 
@@ -1259,12 +1235,4 @@ public final class Client extends AbstractPersistableCustom<Long> {
     public Long getMigrationId() {
         return migrationId;
     }
-
-    public String getCampoPrueba() { return campoPrueba; }
-
-    public void setCampoPrueba(String campoPrueba) { this.campoPrueba = campoPrueba; }
-
-    public org.apache.fineract.infrastructure.codes.domain.CodeValue getPaisPrueba() { return paisPrueba; }
-
-    public void setPaisPrueba(CodeValue paisPrueba) { this.paisPrueba = paisPrueba; }
 }

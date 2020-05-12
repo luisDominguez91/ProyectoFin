@@ -95,9 +95,9 @@ public class ClientFamilyMembersWritePlatformServiceImpl implements ClientFamily
 		String curp="";
 		String rfc="";
 		Date createdOn=null;
-		String createdBy="";
+		Long createdBy=null;
 		Date updatedOn=null;
-		String updatedBy="";
+		Long updatedBy=null;
 		String emailAddress="";
 		String nss="";
 		String phoneNo="";
@@ -189,11 +189,11 @@ public class ClientFamilyMembersWritePlatformServiceImpl implements ClientFamily
 		}
 
 		createdOn= new Date();
-		createdBy = user.getUsername();
+		createdBy = user.getId();
 		// }
 
 		ClientFamilyMembers clientFamilyMembers=ClientFamilyMembers.fromJson(client, firstName, middleName, lastName, qualification,mobileNumber,age,isDependent, relationship, maritalStatus, gender, dateOfBirth, profession,
-				motherlastName, curp, rfc, createdBy, createdOn,updatedBy, updatedOn, emailAddress, nss, phoneNo, active);
+				motherlastName, curp, rfc, createdBy, createdOn,updatedBy, updatedOn, emailAddress, nss, phoneNo, active, null, null, false);
 		
 		this.clientFamilyRepository.save(clientFamilyMembers);
 		
@@ -229,9 +229,9 @@ public class ClientFamilyMembersWritePlatformServiceImpl implements ClientFamily
 		String curp="";
 		String rfc="";
 		Date createdOn=null;
-		String createdBy="";
+		Long createdBy=null;
 		Date updatedOn=null;
-		String updatedBy="";
+		Long updatedBy=null;
 		String emailAddress="";
 		String nss="";
 		String phoneNo="";
@@ -343,11 +343,11 @@ public class ClientFamilyMembersWritePlatformServiceImpl implements ClientFamily
 			}
 
 			createdOn= new Date();
-			createdBy = user.getUsername();
+			createdBy = user.getId();
 			// }
 			
 			familyMember=ClientFamilyMembers.fromJson(client, firstName, middleName, lastName, qualification,mobileNumber,age,isDependent, relationship, maritalStatus, gender, dateOfBirth, profession,
-					motherlastName, curp, rfc, createdBy, createdOn,updatedBy, updatedOn, emailAddress, nss, phoneNo, active);
+					motherlastName, curp, rfc, createdBy, createdOn,updatedBy, updatedOn, emailAddress, nss, phoneNo, active, null, null, false);
 			
 			this.clientFamilyRepository.save(familyMember);	
 			
@@ -386,9 +386,9 @@ public class ClientFamilyMembersWritePlatformServiceImpl implements ClientFamily
 		String curp="";
 		String rfc="";
 		Date createdOn=null;
-		String createdBy="";
+		Long createdBy=null;
 		Date updatedOn=null;
-		String updatedBy="";
+		Long updatedBy=null;
 		String emailAddress="";
 		String nss="";
 		String phoneNo="";
@@ -505,7 +505,7 @@ public class ClientFamilyMembersWritePlatformServiceImpl implements ClientFamily
 
 		updatedOn=new Date();
 		clientFamilyMember.setUpdatedOn(updatedOn);
-		updatedBy=user.getUsername();
+		updatedBy=user.getId();
 		clientFamilyMember.setUpdatedBy(updatedBy);
 		// }
 
@@ -521,23 +521,20 @@ public class ClientFamilyMembersWritePlatformServiceImpl implements ClientFamily
 	@Override
 	public CommandProcessingResult deleteFamilyMember(Long clientFamilyMemberId, JsonCommand command) {
 		// TODO Auto-generated method stub
-		
-		this.context.authenticatedUser();
+
+		AppUser user = this.context.authenticatedUser();
 		
 		apiJsonDeserializer.validateForDelete(clientFamilyMemberId);
 		
 		ClientFamilyMembers clientFamilyMember=null;
-		
-		
-		
+
 		if(clientFamilyMemberId!=null)
 		{
-			 clientFamilyMember=clientFamilyRepository.getOne(clientFamilyMemberId);
-			clientFamilyRepository.delete(clientFamilyMember);
-			
+            clientFamilyMember=clientFamilyRepository.getOne(clientFamilyMemberId);
+            clientFamilyMember.delete(user.getId());
+			clientFamilyRepository.save(clientFamilyMember);
 		}
-		
-		
+
 		if(clientFamilyMember!=null)
 		{
 			return new CommandProcessingResultBuilder().withCommandId(command.commandId())
@@ -548,10 +545,5 @@ public class ClientFamilyMembersWritePlatformServiceImpl implements ClientFamily
 			return new CommandProcessingResultBuilder().withCommandId(command.commandId())
 					.withEntityId(Long.valueOf(clientFamilyMemberId)).build();	
 		}
-		
 	}
-	
-	
-	
-
 }

@@ -3155,4 +3155,11 @@ public class CommandWrapperBuilder {
         this.href = "/self/pocket?command="+PocketApiConstants.delinkAccountsFromPocketCommandParam;
         return this;
     }
+
+    public CommandWrapperBuilder crearAuto() {
+        this.actionName = "CREATE";
+        this.entityName = "AUTOS";
+        this.href = "/auto/template";
+        return this;
+    }
 }

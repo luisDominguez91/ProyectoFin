@@ -301,7 +301,7 @@ public class AddressReadPlatformServiceImpl implements AddressReadPlatformServic
 	public Collection<AddressData> retrieveAllClientAddress(final long clientid) {
 		this.context.authenticatedUser();
 		final AddMapper rm = new AddMapper();
-		final String sql = "select " + rm.schema() + " and ca.client_id=?";
+		final String sql = "select " + rm.schema() + " and ca.client_id=? and addr.ctm_is_delete is null";
 		return this.jdbcTemplate.query(sql, rm, new Object[] { clientid });
 	}
 
